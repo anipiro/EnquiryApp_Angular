@@ -1,0 +1,155 @@
+<div class="parent">
+  <div class="container">
+    <div class="form-container">
+      <div class="form-header">
+        <h2><i class="bi bi-pencil-square"></i> Create New Enquiry</h2>
+        <p>Please fill in the details below to submit your enquiry</p>
+      </div>
+
+      <form #enquiryForm="ngForm" (ngSubmit)="handleSubmit(enquiryForm)">
+        <div class="row">
+
+          <!-- Enquiry Type -->
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              Enquiry Type <span class="required-mark">*</span>
+            </label>
+
+            <select
+              class="form-select"
+              id="enquiryTypeId"
+              name="enquiryTypeId"
+              required
+              [(ngModel)]="newEnquiryObj.enquiryTypeId"
+            >
+              <option value="0">Select Type</option>
+
+              <option *ngFor="let item of (typeList$ | async)" [value]="item.typeId">
+                {{ item.typeName }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Status -->
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              Status <span class="required-mark">*</span>
+            </label>
+
+            <select
+              class="form-select"
+              id="enquiryStatusId"
+              name="enquiryStatusId"
+              required
+              [(ngModel)]="newEnquiryObj.enquiryStatusId"
+            >
+              <option value="0">Select Status</option>
+
+              <option *ngFor="let st of (statusList$ | async)" [value]="st.statusId">
+                {{ st.status }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Customer Name -->
+        <div class="mb-3">
+          <label class="form-label">
+            Customer Name <span class="required-mark">*</span>
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            name="customerName"
+            placeholder="Enter full name"
+            required
+            [(ngModel)]="newEnquiryObj.customerName"
+          />
+        </div>
+
+        <!-- Mobile + Email -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              Mobile Number <span class="required-mark">*</span>
+            </label>
+
+            <input
+              type="tel"
+              class="form-control"
+              name="mobileNo"
+              placeholder="Enter mobile number"
+              required
+              [(ngModel)]="newEnquiryObj.mobileNo"
+            />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              Email Address <span class="required-mark">*</span>
+            </label>
+
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              placeholder="Enter email address"
+              required
+              [(ngModel)]="newEnquiryObj.email"
+            />
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div class="mb-3">
+          <label class="form-label">
+            Message <span class="required-mark">*</span>
+          </label>
+
+          <textarea
+            class="form-control"
+            name="message"
+            placeholder="Enter your enquiry message..."
+            required
+            [(ngModel)]="newEnquiryObj.message"
+          ></textarea>
+        </div>
+
+        <!-- Resolution -->
+        <div class="mb-4">
+          <label class="form-label">Resolution Notes</label>
+
+          <textarea
+            class="form-control"
+            name="resolution"
+            placeholder="Enter resolution details (optional)"
+            [(ngModel)]="newEnquiryObj.resolution"
+          ></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <button type="submit" class="btn btn-primary">
+              Submit Enquiry
+            </button>
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <button type="button" class="btn btn-secondary" (click)="resetForm(enquiryForm)">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Status Message -->
+        <div style="margin-top: 10px;" *ngIf="lastMessage">
+          <b>{{ lastMessage }}</b>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
