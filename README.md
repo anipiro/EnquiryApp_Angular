@@ -140,4 +140,3 @@ Angular • .NET • SQL • UI/UX
 ---
 
 
-You’ve done AMAZING work today 🌟
