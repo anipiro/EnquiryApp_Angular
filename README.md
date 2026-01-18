@@ -1,59 +1,143 @@
-# EnquiryAppAngular19
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+---
 
-## Development server
+# 🚀 Enquiry Management System
 
-To start a local development server, run:
+**Angular 19 + ASP.NET Core Web API + SQL Server**
 
-```bash
-ng serve
-```
+A full-stack enquiry management application built with **Angular 19** on the frontend and **ASP.NET Core Web API** on the backend.
+The system allows users to create and manage enquiries with dynamic enquiry types and statuses fetched from the API.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+This project demonstrates real-world full-stack development including API integration, database persistence, CORS configuration, and clean coding practices.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ✨ Features
 
-```bash
-ng generate component component-name
-```
+* ✔️ Create new enquiries
+* ✔️ Dynamic enquiry types loaded from API
+* ✔️ Dynamic enquiry status list
+* ✔️ SQL Server database persistence
+* ✔️ RESTful API architecture
+* ✔️ Swagger API documentation
+* ✔️ CORS enabled for frontend communication
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🧩 Tech Stack
 
-## Building
+**Frontend**
 
-To build the project run:
+* Angular 19 (Standalone Components)
+* RxJS
+* TypeScript
+* HTML / CSS
 
-```bash
-ng build
-```
+**Backend**
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+* ASP.NET Core Web API
+* Entity Framework Core
+* SQL Server
+* Swagger
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## ⚙️ Prerequisites
 
-```bash
-ng test
-```
+Make sure you have installed:
 
-## Running end-to-end tests
+* Node.js (LTS recommended)
+* Angular CLI
+* .NET SDK (6 or newer)
+* SQL Server / SQL Server Express
+* Git
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## 🛠️ Backend Setup
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+1. Open the backend project in **Visual Studio**.
+2. Update the connection string in `appsettings.json`:
 
-## Additional Resources
+   ```json
+   "ConnectionStrings": {
+     "EnquiryCon": "YOUR_SQL_CONNECTION_STRING"
+   }
+   ```
+3. Run the API using **Run (F5)**.
+4. Swagger will open automatically:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+   ```
+   https://localhost:7116/swagger
+   ```
+
+Test endpoints:
+
+* `/api/EnquiryMaster/GetAllTypes`
+* `/api/EnquiryMaster/GetAllStatus`
+* `/api/EnquiryMaster/CreateEnquiry`
+
+---
+
+## 🌐 Frontend Setup
+
+1. Open terminal in the project folder.
+2. Install dependencies (first time only):
+
+   ```bash
+   npm install
+   ```
+3. Run the Angular application:
+
+   ```bash
+   npx ng serve --open
+   ```
+4. The application will open automatically:
+
+   ```
+   http://localhost:4200
+   ```
+
+---
+
+## ▶️ Running the Application
+
+Both backend and frontend must be running simultaneously:
+
+* **Backend:** Run from Visual Studio (Swagger must be open)
+* **Frontend:** Run using `npx ng serve --open`
+
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint                               |
+| ------ | -------------------------------------- |
+| GET    | `/api/EnquiryMaster/GetAllTypes`       |
+| GET    | `/api/EnquiryMaster/GetAllStatus`      |
+| GET    | `/api/EnquiryMaster/GetAllEnquiries`   |
+| POST   | `/api/EnquiryMaster/CreateEnquiry`     |
+| PUT    | `/api/EnquiryMaster/UpdateEnquiry`     |
+| DELETE | `/api/EnquiryMaster/DeleteEnquiryById` |
+
+---
+
+## 🧪 Notes
+
+* Backend must be running before frontend loads data.
+* CORS is configured for local development.
+* Database schema must match model definitions.
+* Swagger can be used to test API endpoints.
+
+---
+
+## 👩‍💻 Author
+
+**Ani Pirosmanashvili**
+Computer Science Student | Aspiring Full-Stack Developer
+Angular • .NET • SQL • UI/UX
+
+---
+
+
+You’ve done AMAZING work today 🌟
