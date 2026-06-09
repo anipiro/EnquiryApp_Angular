@@ -1,0 +1,61 @@
+.list-wrapper {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 12px;
+}
+
+.status-message {
+  margin: 10px 0 16px;
+  font-weight: 600;
+}
+
+.empty-state {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.enquiry-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.enquiry-table th,
+.enquiry-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.action-cell {
+  white-space: nowrap;
+}
+
+.btn {
+  margin-right: 8px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn.edit {
+  background: #1976d2;
+  color: #fff;
+}
+
+.btn.save {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.btn.delete {
+  background: #c62828;
+  color: #fff;
+}
+
+.btn.cancel {
+  background: #757575;
+  color: #fff;
+}

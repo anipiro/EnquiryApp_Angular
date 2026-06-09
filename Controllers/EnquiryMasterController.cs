@@ -1,72 +1,74 @@
-﻿using Enquiry.API.Model;
+using Enquiry.API.Model;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Enquiry.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/enquiries")]
     [EnableCors("AllowCors")]
-    public class EnquiryMasterController : ControllerBase
+    public class EnquiryMasterController(EnquiryDbContext context) : ControllerBase
     {
-        private readonly EnquiryDbContext _context;
-        public EnquiryMasterController(EnquiryDbContext context)
+        [HttpGet("statuses")]
+        public async Task<IActionResult> GetStatuses()
         {
-            _context = context;
-        }
-        [HttpGet("GetAllStatus")]
-        public List<EnquiryStatus> GetAllStatus()
-        {
-            var list = _context.EnquiryStatus.ToList();
-            return list;
-        }
-        [HttpGet("GetAllTypes")]
-        public List<EnquiryType> GetAllTypes()
-        {
-            var list = _context.EnquiryType.ToList();
-            return list;
-        }
-        [HttpGet("GetAllEnquiries")]
-        public List<EnquiryModel> GetAllEnquiry()
-        {
-            var list = _context.EnquiryModel.ToList();
-            return list;
-        }
-        [HttpPut("UpdateEnquiry")]
-        public EnquiryModel Update(EnquiryModel obj)
-        {
-            var record = _context.EnquiryModel.SingleOrDefault(m => m.enquiryId == obj.enquiryId);
-            if(record != null)
-            {
-                record.resolution = obj.resolution;
-                record.enquiryStatusId = obj.enquiryStatusId;
-                _context.SaveChanges();
-            }
-            return obj;
-        }
-        [HttpDelete("DeleteEnquiryById")]
-        public bool DeleteEnquiryById(int id)
-        {
-            var record = _context.EnquiryModel.SingleOrDefault(m => m.enquiryId == id);
-            if (record != null)
-            {
-                _context.EnquiryModel.Remove(record);
-                _context.SaveChanges();
-                return true;
-            }
-            else { 
-                return false;
-            }
-        }
-       
-        [HttpPost("CreateEnquiry")]
-        public EnquiryModel CreateEnquiry([FromBody] EnquiryModel obj)
-        {
-            _context.EnquiryModel.Add(obj);
-            _context.SaveChanges();
-            return obj;
+            var statuses = await context.EnquiryStatus.ToListAsync();
+            return Ok(statuses);
         }
 
+        [HttpGet("types")]
+        public async Task<IActionResult> GetTypes()
+        {
+            var types = await context.EnquiryType.ToListAsync();
+            return Ok(types);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEnquiries()
+        {
+            var enquiries = await context.EnquiryModel.ToListAsync();
+            return Ok(enquiries);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEnquiry([FromBody] EnquiryModel enquiry)
+        {
+            context.EnquiryModel.Add(enquiry);
+            await context.SaveChangesAsync();
+
+            return Created($"/api/enquiries/{enquiry.EnquiryId}", enquiry);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateEnquiry(int id, [FromBody] EnquiryModel enquiry)
+        {
+            var record = await context.EnquiryModel.FirstOrDefaultAsync(m => m.EnquiryId == id);
+            if (record is null)
+            {
+                return NotFound();
+            }
+
+            record.Resolution = enquiry.Resolution;
+            record.EnquiryStatusId = enquiry.EnquiryStatusId;
+            await context.SaveChangesAsync();
+
+            return Ok(record);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteEnquiry(int id)
+        {
+            var record = await context.EnquiryModel.FirstOrDefaultAsync(m => m.EnquiryId == id);
+            if (record is null)
+            {
+                return NotFound();
+            }
+
+            context.EnquiryModel.Remove(record);
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

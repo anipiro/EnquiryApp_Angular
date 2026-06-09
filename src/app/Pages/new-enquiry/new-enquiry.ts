@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { AsyncPipe, NgIf, NgFor } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Master } from '../../../service/master';
+import { Enquiry, EnquiryStatus, EnquiryType } from '../../models/enquiry.model';
 
 @Component({
   selector: 'app-new-enquiry',
@@ -16,8 +17,7 @@ export class NewEnquiry {
 
   lastMessage = '';
 
-  // ✅ Keep createdDate locally if you want, but we won't send it to API
-  newEnquiryObj = {
+  newEnquiryObj: Enquiry = {
     enquiryId: 0,
     enquiryTypeId: 0,
     enquiryStatusId: 0,
@@ -29,24 +29,23 @@ export class NewEnquiry {
     resolution: '',
   };
 
-  typeList$: Observable<any[]> = this.masterSvr.getEnquiryTypes();
-  statusList$: Observable<any[]> = this.masterSvr.getStatus();
+  typeList$: Observable<EnquiryType[]> = this.masterSvr.getEnquiryTypes();
+  statusList$: Observable<EnquiryStatus[]> = this.masterSvr.getStatus();
 
   handleSubmit(form: NgForm) {
     this.lastMessage = 'Submitting...';
 
-    // ✅ Clone then remove createdDate so SQL doesn't crash
-    const payload: any = { ...this.newEnquiryObj };
-    delete payload.createdDate;
-
-    console.log('Payload sent to API:', payload);
+    const payload: Enquiry = {
+      ...this.newEnquiryObj,
+      createdDate: undefined,
+    };
 
     this.masterSvr.createEnquiry(payload).subscribe({
       next: () => {
         this.lastMessage = '✅ Saved successfully!';
         this.resetForm(form);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('API Error:', err);
         this.lastMessage = '❌ Failed to save. Check console.';
       },

@@ -1,10 +1,13 @@
-﻿using Enquiry.API.Model;
+using Enquiry.API.Model;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+});
 
 // ✅ CORS — allow ANY localhost port (Angular random ports)
 builder.Services.AddCors(options =>

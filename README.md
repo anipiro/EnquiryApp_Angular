@@ -1,142 +1,135 @@
+# EnquiryApp
 
----
+EnquiryApp is a full-stack hybrid application built with **ASP.NET Core 8 Web API** and **Angular**. The project is structured around clean RESTful design, asynchronous data access, and a frontend service layer aligned to resource-oriented API endpoints.
 
-# 🚀 Enquiry Management System
+## Highlights
 
-**Angular 19 + ASP.NET Core Web API + SQL Server**
+- .NET 8 Web API backend with Entity Framework Core and SQL Server
+- Angular frontend with standalone components and HttpClient-based service abstraction
+- Fully asynchronous controller data access (`ToListAsync`, `FirstOrDefaultAsync`, `SaveChangesAsync`)
+- Resource-oriented REST endpoints under `api/enquiries`
+- C# PascalCase entity properties with camelCase JSON contract output for frontend compatibility
+- Unified repository hygiene for .NET + Angular (`.gitignore`, `.gitattributes`)
 
-A full-stack enquiry management application built with **Angular 19** on the frontend and **ASP.NET Core Web API** on the backend.
-The system allows users to create and manage enquiries with dynamic enquiry types and statuses fetched from the API.
+## Architecture Notes
 
-This project demonstrates real-world full-stack development including API integration, database persistence, CORS configuration, and clean coding practices.
+### Backend
 
----
+- Controller: `EnquiryMasterController`
+- Base route: `/api/enquiries`
+- Async action methods returning `Task<IActionResult>`
+- DbContext injected via primary constructor syntax
+- JSON serialization configured to camelCase in `Program.cs`
 
-## ✨ Features
+### Frontend
 
-* ✔️ Create new enquiries
-* ✔️ Dynamic enquiry types loaded from API
-* ✔️ Dynamic enquiry status list
-* ✔️ SQL Server database persistence
-* ✔️ RESTful API architecture
-* ✔️ Swagger API documentation
-* ✔️ CORS enabled for frontend communication
+- Service: `src/service/master.ts`
+- Service methods aligned with REST API:
+  - `getEnquiries()` → `GET /api/enquiries`
+  - `getStatus()` → `GET /api/enquiries/statuses`
+  - `getEnquiryTypes()` → `GET /api/enquiries/types`
+  - `createEnquiry()` → `POST /api/enquiries`
+  - `updateEnquiry()` → `PUT /api/enquiries/{id}`
+  - `deleteEnquiry()` → `DELETE /api/enquiries/{id}`
 
----
+## Project Layout
 
-## 🧩 Tech Stack
+```text
+.
+├─ Controllers/
+│  └─ EnquiryMasterController.cs
+├─ Model/
+│  ├─ EnquiryDbContext.cs
+│  ├─ EnquiryModel.cs
+│  ├─ EnquiryStatus.cs
+│  └─ EnquiryType.cs
+├─ Program.cs
+├─ appsettings.json
+├─ appsettings.Development.json
+├─ src/
+│  ├─ app/
+│  │  ├─ Pages/
+│  │  │  ├─ enquiry-list/
+│  │  │  └─ new-enquiry/
+│  │  ├─ app.config.ts
+│  │  ├─ app.routes.ts
+│  │  └─ app.ts
+│  └─ service/
+│     └─ master.ts
+├─ .gitignore
+└─ .gitattributes
+```
 
-**Frontend**
+## API Endpoints
 
-* Angular 19 (Standalone Components)
-* RxJS
-* TypeScript
-* HTML / CSS
+| Method | Route                     | Description               |
+|--------|---------------------------|---------------------------|
+| GET    | `/api/enquiries`          | Get all enquiries         |
+| GET    | `/api/enquiries/statuses` | Get status catalog        |
+| GET    | `/api/enquiries/types`    | Get enquiry type catalog  |
+| POST   | `/api/enquiries`          | Create an enquiry         |
+| PUT    | `/api/enquiries/{id}`     | Update enquiry status/resolution |
+| DELETE | `/api/enquiries/{id}`     | Delete enquiry            |
 
-**Backend**
+## Configuration
 
-* ASP.NET Core Web API
-* Entity Framework Core
-* SQL Server
-* Swagger
+Use generic root config and local dev overrides:
 
----
+- `appsettings.json`: generic/non-machine-specific defaults
+- `appsettings.Development.json`: local SQL Server connection string
 
-## ⚙️ Prerequisites
+Example:
 
-Make sure you have installed:
+```json
+{
+  "ConnectionStrings": {
+    "EnquiryCon": "Server=YOUR_SERVER;Database=EnquiryDb;Trusted_Connection=True;TrustServerCertificate=True"
+  }
+}
+```
 
-* Node.js (LTS recommended)
-* Angular CLI
-* .NET SDK (6 or newer)
-* SQL Server / SQL Server Express
-* Git
+## Quick Start (CLI)
 
----
+### 1) Restore backend packages
 
-## 🛠️ Backend Setup
+```bash
+dotnet restore
+```
 
-1. Open the backend project in **Visual Studio**.
-2. Update the connection string in `appsettings.json`:
+### 2) Run backend API
 
-   ```json
-   "ConnectionStrings": {
-     "EnquiryCon": "YOUR_SQL_CONNECTION_STRING"
-   }
-   ```
-3. Run the API using **Run (F5)**.
-4. Swagger will open automatically:
+```bash
+dotnet run
+```
 
-   ```
-   https://localhost:7116/swagger
-   ```
+Swagger:
 
-Test endpoints:
+```text
+https://localhost:7116/swagger
+```
 
-* `/api/EnquiryMaster/GetAllTypes`
-* `/api/EnquiryMaster/GetAllStatus`
-* `/api/EnquiryMaster/CreateEnquiry`
+### 3) Install frontend packages
 
----
+```bash
+npm install
+```
 
-## 🌐 Frontend Setup
+### 4) Run Angular app
 
-1. Open terminal in the project folder.
-2. Install dependencies (first time only):
+```bash
+npm start
+```
 
-   ```bash
-   npm install
-   ```
-3. Run the Angular application:
+Frontend URL:
 
-   ```bash
-   npx ng serve --open
-   ```
-4. The application will open automatically:
+```text
+http://localhost:4200
+```
 
-   ```
-   http://localhost:4200
-   ```
+## Development Checklist
 
----
-
-## ▶️ Running the Application
-
-Both backend and frontend must be running simultaneously:
-
-* **Backend:** Run from Visual Studio (Swagger must be open)
-* **Frontend:** Run using `npx ng serve --open`
-
----
-
-## 📡 API Endpoints
-
-| Method | Endpoint                               |
-| ------ | -------------------------------------- |
-| GET    | `/api/EnquiryMaster/GetAllTypes`       |
-| GET    | `/api/EnquiryMaster/GetAllStatus`      |
-| GET    | `/api/EnquiryMaster/GetAllEnquiries`   |
-| POST   | `/api/EnquiryMaster/CreateEnquiry`     |
-| PUT    | `/api/EnquiryMaster/UpdateEnquiry`     |
-| DELETE | `/api/EnquiryMaster/DeleteEnquiryById` |
-
----
-
-## 🧪 Notes
-
-* Backend must be running before frontend loads data.
-* CORS is configured for local development.
-* Database schema must match model definitions.
-* Swagger can be used to test API endpoints.
-
----
-
-## 👩‍💻 Author
-
-**Ani Pirosmanashvili**
-Computer Science Student | Aspiring Full-Stack Developer
-Angular • .NET • SQL • UI/UX
-
----
-
-
+- Keep backend and frontend running simultaneously during local development
+- Keep all new API actions async and `Task<IActionResult>` based
+- Preserve REST resource naming conventions when adding endpoints
+- Keep JSON contract camelCase for frontend compatibility
+- Do not commit machine-specific secrets or local-only environment data

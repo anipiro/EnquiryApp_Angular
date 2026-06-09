@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Enquiry.API.Model
@@ -6,7 +6,8 @@ namespace Enquiry.API.Model
     public class EnquiryType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int typeId { get; set; }
-        public string typeName { get; set; } = string.Empty;
+        public int TypeId { get; set; }
+
+        public string TypeName { get; set; } = string.Empty;
     }
 }

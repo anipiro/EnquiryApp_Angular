@@ -1,1 +1,55 @@
-<p>enquiry-list works!</p>
+<div class="list-wrapper">
+  <h2>Enquiry List</h2>
+
+  <p class="status-message" *ngIf="message">{{ message }}</p>
+
+  <div *ngIf="enquiries.length === 0" class="empty-state">No enquiries found.</div>
+
+  <table *ngIf="enquiries.length > 0" class="enquiry-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>Status Id</th>
+        <th>Resolution</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of enquiries">
+        <td>{{ item.enquiryId }}</td>
+        <td>{{ item.customerName }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.mobileNo }}</td>
+
+        <td>
+          <ng-container *ngIf="selectedEnquiryId === item.enquiryId; else readStatus">
+            <input type="number" [(ngModel)]="selectedStatusId" />
+          </ng-container>
+          <ng-template #readStatus>{{ item.enquiryStatusId }}</ng-template>
+        </td>
+
+        <td>
+          <ng-container *ngIf="selectedEnquiryId === item.enquiryId; else readResolution">
+            <input type="text" [(ngModel)]="selectedResolution" />
+          </ng-container>
+          <ng-template #readResolution>{{ item.resolution }}</ng-template>
+        </td>
+
+        <td class="action-cell">
+          <ng-container *ngIf="selectedEnquiryId === item.enquiryId; else defaultActions">
+            <button class="btn save" (click)="saveEdit(item)">Save</button>
+            <button class="btn cancel" (click)="cancelEdit()">Cancel</button>
+          </ng-container>
+
+          <ng-template #defaultActions>
+            <button class="btn edit" (click)="startEdit(item)">Edit</button>
+            <button class="btn delete" (click)="deleteEnquiry(item)">Delete</button>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

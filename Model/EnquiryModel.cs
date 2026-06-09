@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Enquiry.API.Model
@@ -7,19 +7,19 @@ namespace Enquiry.API.Model
     public class EnquiryModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int enquiryId { get; set; }
+        public int EnquiryId { get; set; }
 
-        public int enquiryTypeId { get; set; }
-        public int enquiryStatusId { get; set; }
+        public int EnquiryTypeId { get; set; }
+        public int EnquiryStatusId { get; set; }
 
-        public string customerName { get; set; } = string.Empty;
-        public string mobileNo { get; set; } = string.Empty;
-        public string email { get; set; } = string.Empty;
-        public string message { get; set; } = string.Empty;
+        public string CustomerName { get; set; } = string.Empty;
+        public string MobileNo { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
 
         [NotMapped]
-        public DateTime createdDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public string resolution { get; set; } = string.Empty;
+        public string Resolution { get; set; } = string.Empty;
     }
 }
