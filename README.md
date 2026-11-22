@@ -10,7 +10,6 @@ A customer enquiry tracker with an ASP.NET Core Web API and an Angular front end
 - **Delete.** Delete on a row removes the enquiry and reloads the list.
 - **Swagger UI.** In the Development environment the API serves Swagger UI at `/swagger`.
 
-Some parts are unfinished. `src/main.ts` starts the `App` component, whose template is still the Angular starter page with the router outlet at the bottom, so the two pages render under that placeholder. The navigation bar in `src/app/app.component.html` is not wired in, and its search box does nothing. The spec files are the generated "should create" stubs.
 
 ## How it is built
 
