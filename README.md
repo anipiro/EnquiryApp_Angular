@@ -1,135 +1,84 @@
 # EnquiryApp
 
-EnquiryApp is a full-stack hybrid application built with **ASP.NET Core 8 Web API** and **Angular**. The project is structured around clean RESTful design, asynchronous data access, and a frontend service layer aligned to resource-oriented API endpoints.
+A customer enquiry tracker with an ASP.NET Core Web API and an Angular front end, both kept in this one repository.
 
-## Highlights
+## What it does
 
-- .NET 8 Web API backend with Entity Framework Core and SQL Server
-- Angular frontend with standalone components and HttpClient-based service abstraction
-- Fully asynchronous controller data access (`ToListAsync`, `FirstOrDefaultAsync`, `SaveChangesAsync`)
-- Resource-oriented REST endpoints under `api/enquiries`
-- C# PascalCase entity properties with camelCase JSON contract output for frontend compatibility
-- Unified repository hygiene for .NET + Angular (`.gitignore`, `.gitattributes`)
+- **New enquiry form.** The `/createNew` page takes an enquiry type, a status, the customer's name, mobile number and email, a message and optional resolution notes, and posts them to the API. The type and status dropdowns are filled from the API.
+- **Enquiry list.** The `/list` page shows every enquiry in a table with its id, customer, email, mobile number, status id and resolution.
+- **Edit in place.** Edit on a row turns its status id and resolution into inputs; Save sends them to the API and reloads the list.
+- **Delete.** Delete on a row removes the enquiry and reloads the list.
+- **Swagger UI.** In the Development environment the API serves Swagger UI at `/swagger`.
 
-## Architecture Notes
+Some parts are unfinished. `src/main.ts` starts the `App` component, whose template is still the Angular starter page with the router outlet at the bottom, so the two pages render under that placeholder. The navigation bar in `src/app/app.component.html` is not wired in, and its search box does nothing. The spec files are the generated "should create" stubs.
 
-### Backend
+## How it is built
 
-- Controller: `EnquiryMasterController`
-- Base route: `/api/enquiries`
-- Async action methods returning `Task<IActionResult>`
-- DbContext injected via primary constructor syntax
-- JSON serialization configured to camelCase in `Program.cs`
+| Part | Technology |
+|------|------------|
+| API | ASP.NET Core Web API on .NET 8 |
+| Data access | Entity Framework Core 8.0.0 (`Microsoft.EntityFrameworkCore.SqlServer`) |
+| Database | SQL Server |
+| API docs | Swashbuckle.AspNetCore 6.6.2 |
+| Front end | Angular 21.1 (standalone components, template-driven forms), TypeScript 5.9, RxJS 7.8 |
+| Styling | Bootstrap 5.3.8 |
 
-### Frontend
+The API project (`Enquiry.API.csproj`) and the Angular workspace (`package.json`, `angular.json`) share the repository root. On the server, `Controllers/EnquiryMasterController.cs` holds every action and queries `Model/EnquiryDbContext.cs` directly; the entities are `EnquiryModel` (table `Enquiry`), `EnquiryStatus` and `EnquiryType`. `Program.cs` sets camelCase JSON and a CORS policy that accepts any `localhost` origin. On the client, `src/service/master.ts` wraps all HTTP calls, `src/app/models/enquiry.model.ts` has the matching TypeScript interfaces, and the two pages are `src/app/Pages/enquiry-list` and `src/app/Pages/new-enquiry`.
 
-- Service: `src/service/master.ts`
-- Service methods aligned with REST API:
-  - `getEnquiries()` → `GET /api/enquiries`
-  - `getStatus()` → `GET /api/enquiries/statuses`
-  - `getEnquiryTypes()` → `GET /api/enquiries/types`
-  - `createEnquiry()` → `POST /api/enquiries`
-  - `updateEnquiry()` → `PUT /api/enquiries/{id}`
-  - `deleteEnquiry()` → `DELETE /api/enquiries/{id}`
+## API
 
-## Project Layout
+| Method | Path | What it does |
+|--------|------|--------------|
+| GET | `/api/enquiries` | Returns all enquiries. |
+| GET | `/api/enquiries/statuses` | Returns the list of statuses. |
+| GET | `/api/enquiries/types` | Returns the list of enquiry types. |
+| POST | `/api/enquiries` | Creates an enquiry and returns it (201). |
+| PUT | `/api/enquiries/{id}` | Updates the status and resolution of an enquiry; other fields in the body are ignored. 404 if the id does not exist. |
+| DELETE | `/api/enquiries/{id}` | Deletes an enquiry (204). 404 if the id does not exist. |
 
-```text
-.
-├─ Controllers/
-│  └─ EnquiryMasterController.cs
-├─ Model/
-│  ├─ EnquiryDbContext.cs
-│  ├─ EnquiryModel.cs
-│  ├─ EnquiryStatus.cs
-│  └─ EnquiryType.cs
-├─ Program.cs
-├─ appsettings.json
-├─ appsettings.Development.json
-├─ src/
-│  ├─ app/
-│  │  ├─ Pages/
-│  │  │  ├─ enquiry-list/
-│  │  │  └─ new-enquiry/
-│  │  ├─ app.config.ts
-│  │  ├─ app.routes.ts
-│  │  └─ app.ts
-│  └─ service/
-│     └─ master.ts
-├─ .gitignore
-└─ .gitattributes
-```
+## Run it locally
 
-## API Endpoints
+You need the .NET 8 SDK (or later), a SQL Server instance, and Node.js 20.19 or later with npm.
 
-| Method | Route                     | Description               |
-|--------|---------------------------|---------------------------|
-| GET    | `/api/enquiries`          | Get all enquiries         |
-| GET    | `/api/enquiries/statuses` | Get status catalog        |
-| GET    | `/api/enquiries/types`    | Get enquiry type catalog  |
-| POST   | `/api/enquiries`          | Create an enquiry         |
-| PUT    | `/api/enquiries/{id}`     | Update enquiry status/resolution |
-| DELETE | `/api/enquiries/{id}`     | Delete enquiry            |
+1. Clone the repository.
 
-## Configuration
+   ```bash
+   git clone https://github.com/anipiro/EnquiryApp_Angular.git
+   cd EnquiryApp_Angular
+   ```
 
-Use generic root config and local dev overrides:
+2. Set the connection string, `ConnectionStrings:EnquiryCon`. `appsettings.json` has a `YOUR_SERVER` placeholder, but `appsettings.Development.json` overrides it in development and points at the author's own machine, so change it there:
 
-- `appsettings.json`: generic/non-machine-specific defaults
-- `appsettings.Development.json`: local SQL Server connection string
+   ```json
+   "ConnectionStrings": {
+     "EnquiryCon": "Server=YOUR_SERVER;Database=EnquiryDb;Trusted_Connection=True;TrustServerCertificate=True"
+   }
+   ```
 
-Example:
+3. Create the database. The repository has no EF Core migrations, so generate one first:
 
-```json
-{
-  "ConnectionStrings": {
-    "EnquiryCon": "Server=YOUR_SERVER;Database=EnquiryDb;Trusted_Connection=True;TrustServerCertificate=True"
-  }
-}
-```
+   ```bash
+   dotnet tool install --global dotnet-ef
+   dotnet ef migrations add Initial
+   dotnet ef database update
+   ```
 
-## Quick Start (CLI)
+   Then add a few rows to the `EnquiryStatus` and `EnquiryType` tables by hand. Nothing seeds them and the API has no endpoint to create them, and the form needs them for its dropdowns.
 
-### 1) Restore backend packages
+4. Start the API with the HTTPS profile. The Angular service calls `https://localhost:7116` (hard-coded in `src/service/master.ts`), and the default profile only serves HTTP.
 
-```bash
-dotnet restore
-```
+   ```bash
+   dotnet dev-certs https --trust
+   dotnet run --launch-profile https
+   ```
 
-### 2) Run backend API
+5. In a second terminal, start the front end.
 
-```bash
-dotnet run
-```
+   ```bash
+   npm install
+   npm start
+   ```
 
-Swagger:
+The app is at `http://localhost:4200` and Swagger UI at `https://localhost:7116/swagger`.
 
-```text
-https://localhost:7116/swagger
-```
-
-### 3) Install frontend packages
-
-```bash
-npm install
-```
-
-### 4) Run Angular app
-
-```bash
-npm start
-```
-
-Frontend URL:
-
-```text
-http://localhost:4200
-```
-
-## Development Checklist
-
-- Keep backend and frontend running simultaneously during local development
-- Keep all new API actions async and `Task<IActionResult>` based
-- Preserve REST resource naming conventions when adding endpoints
-- Keep JSON contract camelCase for frontend compatibility
-- Do not commit machine-specific secrets or local-only environment data
+Released under the MIT License; see `LICENSE`.
