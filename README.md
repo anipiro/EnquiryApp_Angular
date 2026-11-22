@@ -2,6 +2,8 @@
 
 A customer enquiry tracker with an ASP.NET Core Web API and an Angular front end, both kept in this one repository.
 
+![New enquiry form](screenshots/new-enquiry.png)
+
 ## What it does
 
 - **New enquiry form.** The `/createNew` page takes an enquiry type, a status, the customer's name, mobile number and email, a message and optional resolution notes, and posts them to the API. The type and status dropdowns are filled from the API.
@@ -46,7 +48,7 @@ You need the .NET 8 SDK (or later), a SQL Server instance, and Node.js 20.19 or 
    cd EnquiryApp_Angular
    ```
 
-2. Set the connection string, `ConnectionStrings:EnquiryCon`. `appsettings.json` has a `YOUR_SERVER` placeholder, but `appsettings.Development.json` overrides it in development and points at the author's own machine, so change it there:
+2. Set the connection string, `ConnectionStrings:EnquiryCon`. `appsettings.json` has a `YOUR_SERVER` placeholder, and `appsettings.Development.json` overrides it in development with a local SQL Server Express instance. To use another server, change it there:
 
    ```json
    "ConnectionStrings": {

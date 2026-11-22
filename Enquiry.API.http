@@ -1,6 +1,14 @@
 @Enquiry.API_HostAddress = http://localhost:5104
 
-GET {{Enquiry.API_HostAddress}}/weatherforecast/
+GET {{Enquiry.API_HostAddress}}/api/enquiries
+Accept: application/json
+
+###
+GET {{Enquiry.API_HostAddress}}/api/enquiries/statuses
+Accept: application/json
+
+###
+GET {{Enquiry.API_HostAddress}}/api/enquiries/types
 Accept: application/json
 
 ###
